@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <stdlib.h>
 
 // main shell loop:
 int main()
@@ -63,6 +64,10 @@ int main()
         {
             // child process
             printf("Child process\n");
+            execvp(args[0], args);
+            // if fail print error
+            perror("execvp failed");
+            exit(1);
         }
         else if (p > 0)
         {
