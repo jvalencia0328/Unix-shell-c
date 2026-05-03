@@ -62,7 +62,17 @@ int main()
         if (p == 0)
         {
             // child process
-            printf("Child process");
+            printf("Child process\n");
+        }
+        else if (p > 0)
+        {
+            // parent process
+            printf("Parent process\n");
+        }
+        else
+        {
+            // failed fork
+            printf("Fork failed\n");
         }
     }
 }
