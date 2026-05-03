@@ -30,6 +30,18 @@ int main() {
             break;
 
        
+       //tokenize the input
+
+       
+       char delimiter[] = " ";
+       
+       char *token = strtok(input, delimiter);
+
+    while(token != NULL){
+            printf("Token: %s\n", token);
+            token = strtok(NULL, delimiter);
+        }
+
 
 
         
