@@ -89,6 +89,32 @@ int main()
             continue;
         }
 
+        /// handle output redirection
+        char *output_file = NULL;
+
+        // missing output file flag
+        bool missing_output_file = false;
+        for (int i = 0; args[i] != NULL; i++)
+        {
+            if (strcmp(args[i], ">") == 0)
+            {
+                printf("Output redirection detected\n");
+                if (args[i + 1] != NULL)
+                {
+                    output_file = args[i + 1];
+                    args[i] = NULL;
+                    break;
+                }
+                else
+                {
+                    fprintf(stderr, "Error: no output file specified\n");
+                    missing_output_file = true;
+                }
+            }
+        }
+        if (missing_output_file)
+            continue;
+
         // for a new process
         pid_t p = fork();
 
