@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/wait.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 // main shell loop:
 int main()
@@ -10,7 +11,7 @@ int main()
     while (1)
     {
         // print prompt
-        printf("my_shell> ");
+        printf("Prompt> ");
 
         // read user input
         char input[100];
@@ -43,14 +44,27 @@ int main()
         char *args[100];
 
         int i = 0;
+
+        bool too_many_args = false;
         while (token != NULL)
         {
-            // Store the token in the args array
-            args[i] = token;
+            if (i >= 99)
+            {
+                fprintf(stderr, "Error: too many arguments\n");
+                too_many_args = true;
+                break;
+            }
+            else
 
+            {
+                // Store the token in the args array
+                args[i] = token;
+            }
             i++;
             token = strtok(NULL, delimiter);
         }
+        if (too_many_args)
+            continue;
 
         // Null-terminate the args array
         args[i] = NULL;
@@ -73,6 +87,7 @@ int main()
             }
             continue;
         }
+
         // for a new process
         pid_t p = fork();
 
@@ -92,7 +107,7 @@ int main()
         else
         {
             // failed fork
-            printf("Fork failed\n");
+            perror("Fork failed\n");
         }
     }
 }
