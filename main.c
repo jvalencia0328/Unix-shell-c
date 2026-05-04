@@ -74,7 +74,8 @@ int main()
         {
             if (args[1] == NULL)
             {
-                printf("cd: missing directory\n");
+                // go to home directory
+                chdir(getenv("HOME"));
             }
             else
             {
