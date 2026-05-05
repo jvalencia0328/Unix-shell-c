@@ -92,9 +92,11 @@ int main()
 
         /// handle output redirection
         char *output_file = NULL;
+        char *input_file = NULL;
 
-        // missing output file flag
+        // missing output/input file flag
         bool missing_output_file = false;
+        bool missing_input_file = false;
 
         // append true or false
         bool append_mode = false;
@@ -117,7 +119,7 @@ int main()
                     break;
                 }
             }
-            if (strcmp(args[i], ">>") == 0)
+            else if (strcmp(args[i], ">>") == 0)
             {
                 printf("Output append redirection");
                 if (args[i + 1] != NULL)
@@ -134,9 +136,29 @@ int main()
                     break;
                 }
             }
+            else if (strcmp(args[i], "<") == 0)
+            {
+                printf("Input redirection detected\n");
+                if (args[i + 1] != NULL)
+                {
+                    input_file = args[i + 1];
+                    args[i] = NULL;
+                    break;
+                }
+                else
+                {
+                    fprintf(stderr, "Error: no input file specified\n");
+                    missing_input_file = true;
+                    break;
+                }
+            }
         }
         if (missing_output_file)
             continue;
+        if (missing_input_file)
+            continue;
+
+        // input redirection
 
         // for a new process
         pid_t p = fork();
@@ -144,6 +166,20 @@ int main()
         if (p == 0)
         {
             int fd;
+            if (input_file)
+            {
+                fd = (open)(input_file, O_RDONLY, 0644);
+                if (fd == -1)
+                {
+                    perror("Error: failed to create input file");
+                    exit(1);
+                }
+                else
+                {
+                    dup2(fd, STDIN_FILENO);
+                    close(fd);
+                }
+            }
             if (output_file != NULL)
             {
                 if (append_mode)
